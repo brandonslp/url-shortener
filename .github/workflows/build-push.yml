@@ -12,6 +12,15 @@ jobs:
       - 
         name: Checkout
         uses: actions/checkout@v2
+      -
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: brandonslp/url-shortener
+          tags: |
+            latest
+            ${{ github.sha }}
       -       
         name: Set up Docker Buildx
         id: buildx
@@ -39,7 +48,7 @@ jobs:
           file: ./Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: brandonslp/url-shortener:${{ github.sha }}
+          tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
       -
