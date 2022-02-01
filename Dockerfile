@@ -17,6 +17,6 @@ COPY . .
 
 EXPOSE ${SERVICE_PORT}
 
-CMD ["pm2-runtime", "index.js"]
+CMD ["npm", "start"]
 
 USER node
