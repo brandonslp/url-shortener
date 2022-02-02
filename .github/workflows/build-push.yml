@@ -65,7 +65,7 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
       -
-        name: Image digest
+        name: Output references
         run: |
           echo "Image:"
           echo -e "\t-Digest: ${{ steps.docker_build.outputs.digest }}"
