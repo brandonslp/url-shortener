@@ -17,17 +17,23 @@ jobs:
       - 
         name: Checkout
         uses: actions/checkout@v2
+      - 
+        name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
       -
         name: Docker meta
         id: meta
         uses: docker/metadata-action@v3
         with:
           images: brandonslp/url-shortener
+          labels: |
+            org.opencontainers.image.description=Commit: ${{ github.sha }} - Branch: ${{ steps.extract_branch.outputs.branch }}
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
+            type=ref,event=pr,preffix=${{ steps.extract_branch.outputs.branch }}
             type=semver,pattern={{raw}}
-            type=raw,value=latest-{{branch}}
+            type=raw,value=${{ github.sha }},suffix=${{ steps.extract_branch.outputs.branch }}
       -       
         name: Set up Docker Buildx
         id: buildx
@@ -55,6 +61,7 @@ jobs:
           file: ./Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
+          labels: ${{ steps.meta.outputs.labels }} 
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
