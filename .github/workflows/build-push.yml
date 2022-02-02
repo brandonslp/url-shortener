@@ -31,7 +31,7 @@ jobs:
           labels: |
             org.opencontainers.image.description=Commit: ${{ github.sha }} - Branch: ${{ steps.extract_branch.outputs.branch }}
           tags: |
-            type=ref,event=pr,suffix=-${{ steps.extract_branch.outputs.branch }}
+            type=ref,event=pr
             type=semver,pattern={{raw}}
       -       
         name: Set up Docker Buildx
