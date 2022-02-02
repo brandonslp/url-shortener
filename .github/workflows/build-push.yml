@@ -24,10 +24,10 @@ jobs:
         with:
           images: brandonslp/url-shortener
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
+            type=ref,event=branch # development
+            type=ref,event=pr # pr-{{number}} | pr-20
+            type=semver,pattern={{raw}} # vx.y.z | v0.1.0
+            type=raw,value=latest-{{branch}} # latest-dev
       -       
         name: Set up Docker Buildx
         id: buildx
