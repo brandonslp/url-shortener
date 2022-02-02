@@ -30,10 +30,6 @@ jobs:
           images: brandonslp/url-shortener
           labels: |
             org.opencontainers.image.description=Commit: ${{ github.sha }} - Branch: ${{ steps.extract_branch.outputs.branch }}
-          flavor: |
-            latest=auto
-            prefix=
-            suffix=-${{ steps.extract_branch.outputs.branch }}
           tags: |
             type=ref,event=pr
             type=semver,pattern={{raw}}
@@ -70,4 +66,8 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
       -
         name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+        run: |
+          echo "Image:"
+          echo -e "\t-Digest: ${{ steps.docker_build.outputs.digest }}"
+          echo -e "\t-Tags: ${{ steps.meta.outputs.tags }}"
+          echo -e "\t-Description: Commit: ${{ github.sha }} - Branch: ${{ steps.extract_branch.outputs.branch }}"
