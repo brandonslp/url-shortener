@@ -2,8 +2,13 @@ name: build-push-image
 
 on:
   push:
+    tags:
+      - "v"
+  pull_request:
     branches:
       - "development"
+      - "uat"
+      - "master"
 
 jobs:
   docker:
@@ -19,8 +24,10 @@ jobs:
         with:
           images: brandonslp/url-shortener
           tags: |
-            latest
-            ${{ github.sha }}
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
       -       
         name: Set up Docker Buildx
         id: buildx
