@@ -64,6 +64,20 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
+      - 
+        name: Login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_URI }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+      - 
+        name: "Build And push to ACR"
+        run: |
+          docker build . -t ${{ secrets.ACR_URI }}/url-shortener:${{ steps.meta.outputs.tags }}
+          docker push ${{ secrets.ACR_URI }}/url-shortener:${{ steps.meta.outputs.tags }}
+          echo "##[set-output name=acr_name;]$(echo ${{ secrets.ACR_URI }}/url-shortener:${{ steps.meta.outputs.tags }})"
+        id: acr_build_push
       -
         name: Output references
         run: |
@@ -71,3 +85,4 @@ jobs:
           echo -e "\t-Digest: ${{ steps.docker_build.outputs.digest }}"
           echo -e "\t-Tags: ${{ steps.meta.outputs.tags }}"
           echo -e "\t-Description: Commit: ${{ github.sha }} - Branch: ${{ steps.extract_branch.outputs.branch }}"
+          echo -e "\t-ACR: ${{ steps.acr_build_push.outputs.acr_name }}"
