@@ -28,9 +28,9 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: |
-            brandonslp/${{ secrets.IMAGE_NAME }}
-            ${{ secrets.ACR_URI }}/${{ secrets.IMAGE_NAME }}
-            ghcr.io/${{ github.repository_owner }}/${{ secrets.IMAGE_NAME }}
+            brandonslp/${{ github.event.repository.name }}
+            ${{ secrets.ACR_URI }}/${{ github.event.repository.name }}
+            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}
           labels: |
             org.opencontainers.image.description=Commit: ${{ github.sha }} - Branch: ${{ steps.extract_branch.outputs.branch }}
           tags: |
