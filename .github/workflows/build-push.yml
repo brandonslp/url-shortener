@@ -77,7 +77,7 @@ jobs:
         run: |
           for i in  $(docker images  ${{ secrets.IMAGE_NAME }} --format {{.Tag}}); do echo $1 && docker tag  ${{ secrets.IMAGE_NAME }}:$i ${{ secrets.ACR_URI }}/url-shortener:$i ; done
           docker images
-          for i in  $(docker images  ${{ secrets.ACR_URI }}/url-shortener --format {{.Tag}}); do $1 && docker push ${{ secrets.ACR_URI }}/url-shortener:$i ; done
+          for i in  $(docker images  ${{ secrets.ACR_URI }}/url-shortener --format {{.Tag}}); do echo $1 && docker push ${{ secrets.ACR_URI }}/url-shortener:$i ; done
         id: acr_build_push
       -
         name: Output references
