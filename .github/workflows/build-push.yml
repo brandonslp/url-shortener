@@ -45,44 +45,49 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
-      - 
-        name: Login to ACR
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.ACR_URI }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+      # - 
+      #   name: Login to ACR
+      #   uses: azure/docker-login@v1
+      #   with:
+      #     login-server: ${{ secrets.ACR_URI }}
+      #     username: ${{ secrets.ACR_USERNAME }}
+      #     password: ${{ secrets.ACR_PASSWORD }}
       - 
         name: Login to DockerHub
         uses: docker/login-action@v1 
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      -
-        name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          context: ./ 
-          file: ./Dockerfile
-          builder: ${{ steps.buildx.outputs.name }}
-          push: true
-          labels: ${{ steps.meta.outputs.labels }} 
-          tags: ${{ steps.meta.outputs.tags }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
       - 
-        name: "Push to ACR"
+        name: Test docker
         shell: bash
         run: |
-          for i in  $(docker images  ${{ secrets.IMAGE_NAME }} --format {{.Tag}}); do echo $1 && docker tag  ${{ secrets.IMAGE_NAME }}:$i ${{ secrets.ACR_URI }}/url-shortener:$i ; done
           docker images
-          for i in  $(docker images  ${{ secrets.ACR_URI }}/url-shortener --format {{.Tag}}); do echo $1 && docker push ${{ secrets.ACR_URI }}/url-shortener:$i ; done
-        id: acr_build_push
-      -
-        name: Output references
-        run: |
-          echo "Image:"
-          echo -e "\t-Digest: ${{ steps.docker_build.outputs.digest }}"
-          echo -e "\t-Tags: ${{ steps.meta.outputs.tags }}"
-          echo -e "\t-Description: Commit: ${{ github.sha }} - Branch: ${{ steps.extract_branch.outputs.branch }}"
+      # -
+      #   name: Build and push
+      #   id: docker_build
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./ 
+      #     file: ./Dockerfile
+      #     builder: ${{ steps.buildx.outputs.name }}
+      #     push: true
+      #     labels: ${{ steps.meta.outputs.labels }} 
+      #     tags: ${{ steps.meta.outputs.tags }}
+      #     cache-from: type=local,src=/tmp/.buildx-cache
+      #     cache-to: type=local,dest=/tmp/.buildx-cache
+      # - 
+      #   name: "Push to ACR"
+      #   shell: bash
+      #   run: |
+      #     for i in  $(docker images  ${{ secrets.IMAGE_NAME }} --format {{.Tag}}); do echo $1 && docker tag  ${{ secrets.IMAGE_NAME }}:$i ${{ secrets.ACR_URI }}/url-shortener:$i ; done
+      #     docker images
+      #     for i in  $(docker images  ${{ secrets.ACR_URI }}/url-shortener --format {{.Tag}}); do echo $1 && docker push ${{ secrets.ACR_URI }}/url-shortener:$i ; done
+      #   id: acr_build_push
+      # -
+      #   name: Output references
+      #   run: |
+      #     echo "Image:"
+      #     echo -e "\t-Digest: ${{ steps.docker_build.outputs.digest }}"
+      #     echo -e "\t-Tags: ${{ steps.meta.outputs.tags }}"
+      #     echo -e "\t-Description: Commit: ${{ github.sha }} - Branch: ${{ steps.extract_branch.outputs.branch }}"
