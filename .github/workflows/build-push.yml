@@ -3,7 +3,7 @@ name: build-push-image
 on:
   push:
     tags:
-      - "v"
+      - "v*"
   pull_request:
     branches:
       - "development"
