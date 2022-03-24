@@ -1,11 +1,11 @@
 name: Sonar
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - development
-  pull_request:
-    types: [opened, synchronize, reopened]
+  # push:
+  #   branches:
+  #     - development
+  # pull_request:
+  #   types: [opened, synchronize, reopened]
 jobs:
   sonarcloud:
     name: SonarCloud
