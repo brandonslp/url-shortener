@@ -4,11 +4,11 @@ on:
   create:
     tags:
       - "v*"
-  pull_request:
-    branches:
-      - "development"
-      - "uat"
-      - "master"
+  # pull_request:
+  #   branches:
+  #     - "development"
+  #     - "uat"
+  #     - "master"
 
 jobs:
   docker:
